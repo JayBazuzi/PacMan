@@ -75,7 +75,10 @@ class Game
     }
 
     internal Location PlayerLocation = new Location { x = 3, y = 3 };
-    internal Location GhostLocation = new Location { x = 2, y = 7 };
+    internal Location[] GhostLocations = { 
+                                             new Location { x = 2, y = 7 },
+                                             new Location { x = 2, y = 8 } 
+                                         };
 
     internal Tile[,] Tiles = new Tile[,] {
         { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
@@ -99,7 +102,7 @@ class Game
                 {
                     stringBuilder.Append(Big > 0 ? "C" : "c");
                 }
-                else if (GhostLocation.x == x && GhostLocation.y == y)
+                else if (GhostLocations.Any(gl => gl.x == x && gl.y == y))
                 {
                     stringBuilder.Append("G");
                 }
@@ -152,39 +155,42 @@ class Game
             this.Big = 8;
         }
 
-        bool movedGhost;
-        do
+        foreach (var ghostId in Enumerable.Range(0, this.GhostLocations.Length))
         {
-            switch (random.Next(3))
+            bool movedGhost;
+            do
             {
-                case 0:
-                    movedGhost = TryMoveGhost(GhostLocation.x - 1, GhostLocation.y);
-                    break;
+                switch (random.Next(3))
+                {
+                    case 0:
+                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x - 1, GhostLocations[ghostId].y);
+                        break;
 
-                case 1:
-                    movedGhost = TryMoveGhost(GhostLocation.x + 1, GhostLocation.y);
-                    break;
+                    case 1:
+                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x + 1, GhostLocations[ghostId].y);
+                        break;
 
-                case 2:
-                    movedGhost = TryMoveGhost(GhostLocation.x, GhostLocation.y - 1);
-                    break;
+                    case 2:
+                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x, GhostLocations[ghostId].y - 1);
+                        break;
 
-                case 3:
-                    movedGhost = TryMoveGhost(GhostLocation.x, GhostLocation.y + 1);
-                    break;
+                    case 3:
+                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x, GhostLocations[ghostId].y + 1);
+                        break;
 
-                default:
-                    throw new Exception();
-            }
-        } while (!movedGhost);
+                    default:
+                        throw new Exception();
+                }
+            } while (!movedGhost);
+        }
     }
 
-    private bool TryMoveGhost(int x, int y)
+    private bool TryMoveGhost(int id, int x, int y)
     {
         if (this.Tiles[x, y] != Game.Tile.l)
         {
-            this.GhostLocation.x = x;
-            this.GhostLocation.y = y;
+            this.GhostLocations[id].x = x;
+            this.GhostLocations[id].y = y;
             return true;
         }
         else return false;
@@ -196,7 +202,7 @@ class Game
     {
         get
         {
-            return PlayerLocation.x == GhostLocation.x && PlayerLocation.y == GhostLocation.y;
+            return GhostLocations.Any(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
         }
     }
 
