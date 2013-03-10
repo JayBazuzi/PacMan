@@ -100,7 +100,11 @@ class Game
             {
                 if (PlayerLocation.x == x && PlayerLocation.y == y)
                 {
-                    stringBuilder.Append(Big > 0 ? "C" : "c");
+                    if ((PlayerLocation.x + PlayerLocation.y) % 2 == 0)
+                        stringBuilder.Append(Big > 0 ? "C" : "c");
+                    else 
+                        stringBuilder.Append(Big > 0 ? "O" : "o");
+
                 }
                 else if (GhostLocations.Any(gl => gl.x == x && gl.y == y))
                 {
