@@ -59,10 +59,15 @@ namespace ConsoleApplication1
 
 class Location
 {
-    internal int x;
-    internal int y;
-}
+    internal readonly int x;
+    internal readonly int y;
 
+    public Location(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
 
 class Game
 {
@@ -74,10 +79,10 @@ class Game
         l
     }
 
-    internal Location PlayerLocation = new Location { x = 3, y = 3 };
+    internal Location PlayerLocation = new Location(3, 3);
     internal List<Location> GhostLocations = new List<Location>(new[]{ 
-                                             new Location { x = 2, y = 7 },
-                                             new Location { x = 2, y = 8 } 
+                                             new Location (2,7),
+                                             new Location (2,8),
                                          });
 
     internal Tile[,] Tiles = new Tile[,] {
@@ -102,7 +107,7 @@ class Game
                 {
                     if ((PlayerLocation.x + PlayerLocation.y) % 2 == 0)
                         stringBuilder.Append(Big > 0 ? "C" : "c");
-                    else 
+                    else
                         stringBuilder.Append(Big > 0 ? "O" : "o");
 
                 }
@@ -145,8 +150,7 @@ class Game
     {
         if (this.Tiles[x, y] != Game.Tile.l)
         {
-            this.PlayerLocation.x = x;
-            this.PlayerLocation.y = y;
+            this.PlayerLocation = new Location(x, y);
             if (this.Big > 0) this.Big--;
         }
 
@@ -200,8 +204,7 @@ class Game
     {
         if (this.Tiles[x, y] != Game.Tile.l)
         {
-            this.GhostLocations[id].x = x;
-            this.GhostLocations[id].y = y;
+            this.GhostLocations[id] = new Location(x, y);
             return true;
         }
         else return false;
