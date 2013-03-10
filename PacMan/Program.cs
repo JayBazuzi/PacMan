@@ -69,6 +69,7 @@ class Game
     }
 
     internal Location PlayerLocation = new Location { x = 3, y = 3 };
+    internal Location GhostLocation = new Location { x = 2, y = 7 };
 
     internal Tile[,] Tiles = new Tile[,] {
         { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
@@ -91,6 +92,10 @@ class Game
                 if (PlayerLocation.x == x && PlayerLocation.y == y)
                 {
                     stringBuilder.Append(Big > 0 ? "C" : "c");
+                }
+                else if (GhostLocation.x == x && GhostLocation.y == y)
+                {
+                    stringBuilder.Append("G");
                 }
                 else
                 {
