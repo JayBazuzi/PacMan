@@ -23,12 +23,15 @@ namespace ConsoleApplication1
                     case ConsoleKey.LeftArrow:
                         game.TryMoveTo(game.PlayerLocation.x - 1, game.PlayerLocation.y);
                         break;
+
                     case ConsoleKey.RightArrow:
                         game.TryMoveTo(game.PlayerLocation.x + 1, game.PlayerLocation.y);
                         break;
+
                     case ConsoleKey.UpArrow:
                         game.TryMoveTo(game.PlayerLocation.x, game.PlayerLocation.y - 1);
                         break;
+
                     case ConsoleKey.DownArrow:
                         game.TryMoveTo(game.PlayerLocation.x, game.PlayerLocation.y + 1);
                         break;
