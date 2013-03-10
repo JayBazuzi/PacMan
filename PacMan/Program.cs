@@ -11,12 +11,11 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
             var game = new Game();
+            Console.Clear();
+            Console.WriteLine(game);
 
             do
             {
-                Console.Clear();
-                Console.WriteLine(game);
-
                 var key = Console.ReadKey();
 
                 switch (key.Key)
@@ -33,6 +32,15 @@ namespace ConsoleApplication1
                     case ConsoleKey.DownArrow:
                         game.TryMoveTo(game.PlayerLocation.x, game.PlayerLocation.y + 1);
                         break;
+                }
+
+                Console.Clear();
+                Console.WriteLine(game);
+
+                if (game.Won)
+                {
+                    Console.WriteLine("You win!");
+                    break;
                 }
 
             } while (true);
@@ -128,6 +136,19 @@ class Game
         {
             this.Tiles[this.PlayerLocation.x, this.PlayerLocation.y] = Game.Tile._;
             this.Big = 8;
+        }
+    }
+
+    public bool Won
+    {
+        get
+        {
+            foreach (var y in Enumerable.Range(0, Tiles.GetLength(1)))
+                foreach (var x in Enumerable.Range(0, Tiles.GetLength(0)))
+                    if (this.Tiles[x, y] == Tile.o || this.Tiles[x, y] == Tile.O)
+                        return false;
+
+            return true;
         }
     }
 }
