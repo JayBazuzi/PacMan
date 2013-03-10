@@ -152,33 +152,42 @@ class Game
             this.Big = 8;
         }
 
-        switch (random.Next(3))
+        bool movedGhost;
+        do
         {
-            case 0:
-                TryMoveGhost(GhostLocation.x - 1, GhostLocation.y);
-                break;
+            switch (random.Next(3))
+            {
+                case 0:
+                    movedGhost = TryMoveGhost(GhostLocation.x - 1, GhostLocation.y);
+                    break;
 
-            case 1:
-                TryMoveGhost(GhostLocation.x + 1, GhostLocation.y);
-                break;
+                case 1:
+                    movedGhost = TryMoveGhost(GhostLocation.x + 1, GhostLocation.y);
+                    break;
 
-            case 2:
-                TryMoveGhost(GhostLocation.x, GhostLocation.y - 1);
-                break;
+                case 2:
+                    movedGhost = TryMoveGhost(GhostLocation.x, GhostLocation.y - 1);
+                    break;
 
-            case 3:
-                TryMoveGhost(GhostLocation.x, GhostLocation.y + 1);
-                break;
-        }
+                case 3:
+                    movedGhost = TryMoveGhost(GhostLocation.x, GhostLocation.y + 1);
+                    break;
+
+                default:
+                    throw new Exception();
+            }
+        } while (!movedGhost);
     }
 
-    private void TryMoveGhost(int x, int y)
+    private bool TryMoveGhost(int x, int y)
     {
         if (this.Tiles[x, y] != Game.Tile.l)
         {
             this.GhostLocation.x = x;
             this.GhostLocation.y = y;
+            return true;
         }
+        else return false;
     }
 
     Random random = new Random(0);
