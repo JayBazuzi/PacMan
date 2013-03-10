@@ -59,8 +59,8 @@ namespace ConsoleApplication1
 
 class Location
 {
-    internal readonly int x;
-    internal readonly int y;
+    public readonly int x;
+    public readonly int y;
 
     public Location(int x, int y)
     {
@@ -71,7 +71,7 @@ class Location
 
 class Game
 {
-    internal enum Tile
+    public enum Tile
     {
         _,
         o,
@@ -79,13 +79,13 @@ class Game
         l
     }
 
-    internal Location PlayerLocation = new Location(3, 3);
-    internal List<Location> GhostLocations = new List<Location>(new[]{ 
+    public Location PlayerLocation = new Location(3, 3);
+    public List<Location> GhostLocations = new List<Location>(new[]{ 
                                              new Location (2,7),
                                              new Location (2,8),
                                          });
 
-    internal Tile[,] Tiles = new Tile[,] {
+    public Tile[,] Tiles = new Tile[,] {
         { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
         { Tile.l, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.l, },
         { Tile.l, Tile.o, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.o, Tile.o, Tile.l, },
@@ -146,7 +146,7 @@ class Game
         return stringBuilder.ToString();
     }
 
-    internal void TryMoveTo(int x, int y)
+    public void TryMoveTo(int x, int y)
     {
         if (this.Tiles[x, y] != Game.Tile.l)
         {
@@ -200,7 +200,7 @@ class Game
         }
     }
 
-    private bool TryMoveGhost(int id, int x, int y)
+    bool TryMoveGhost(int id, int x, int y)
     {
         if (this.Tiles[x, y] != Game.Tile.l)
         {
