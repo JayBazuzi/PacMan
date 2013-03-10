@@ -151,7 +151,37 @@ class Game
             this.Tiles[this.PlayerLocation.x, this.PlayerLocation.y] = Game.Tile._;
             this.Big = 8;
         }
+
+        switch (random.Next(3))
+        {
+            case 0:
+                TryMoveGhost(GhostLocation.x - 1, GhostLocation.y);
+                break;
+
+            case 1:
+                TryMoveGhost(GhostLocation.x + 1, GhostLocation.y);
+                break;
+
+            case 2:
+                TryMoveGhost(GhostLocation.x, GhostLocation.y - 1);
+                break;
+
+            case 3:
+                TryMoveGhost(GhostLocation.x, GhostLocation.y + 1);
+                break;
+        }
     }
+
+    private void TryMoveGhost(int x, int y)
+    {
+        if (this.Tiles[x, y] != Game.Tile.l)
+        {
+            this.GhostLocation.x = x;
+            this.GhostLocation.y = y;
+        }
+    }
+
+    Random random = new Random(0);
 
     public bool Lost
     {
@@ -160,6 +190,7 @@ class Game
             return PlayerLocation.x == GhostLocation.x && PlayerLocation.y == GhostLocation.y;
         }
     }
+
     public bool Won
     {
         get
