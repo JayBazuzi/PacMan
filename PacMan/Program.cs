@@ -75,16 +75,16 @@ class Game
     }
 
     internal Location PlayerLocation = new Location { x = 3, y = 3 };
-    internal Location[] GhostLocations = { 
+    internal List<Location> GhostLocations = new List<Location>(new[]{ 
                                              new Location { x = 2, y = 7 },
                                              new Location { x = 2, y = 8 } 
-                                         };
+                                         });
 
     internal Tile[,] Tiles = new Tile[,] {
         { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
         { Tile.l, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.l, },
         { Tile.l, Tile.o, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.o, Tile.o, Tile.l, },
-        { Tile.l, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.O, Tile.l, },
+        { Tile.l, Tile.o, Tile.o, Tile.o, Tile.O, Tile.o, Tile.o, Tile.o, Tile.O, Tile.l, },
         { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
     };
 
@@ -155,12 +155,12 @@ class Game
             this.Big = 8;
         }
 
-        foreach (var ghostId in Enumerable.Range(0, this.GhostLocations.Length))
+        foreach (var ghostId in Enumerable.Range(0, this.GhostLocations.Count))
         {
             bool movedGhost;
             do
             {
-                switch (random.Next(3))
+                switch (random.Next(4))
                 {
                     case 0:
                         movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x - 1, GhostLocations[ghostId].y);
@@ -182,6 +182,13 @@ class Game
                         throw new Exception();
                 }
             } while (!movedGhost);
+        }
+
+        if (this.Big > 0)
+        {
+            var ghostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
+            if (ghostId != -1)
+                this.GhostLocations.RemoveAt(ghostId);
         }
     }
 
