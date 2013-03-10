@@ -46,6 +46,12 @@ namespace ConsoleApplication1
                     break;
                 }
 
+                if (game.Lost)
+                {
+                    Console.Write("You lose!");
+                    break;
+                }
+
             } while (true);
         }
     }
@@ -147,6 +153,13 @@ class Game
         }
     }
 
+    public bool Lost
+    {
+        get
+        {
+            return PlayerLocation.x == GhostLocation.x && PlayerLocation.y == GhostLocation.y;
+        }
+    }
     public bool Won
     {
         get
