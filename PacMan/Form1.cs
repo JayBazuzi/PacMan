@@ -79,5 +79,29 @@ namespace ConsoleApplication1
                 }
             }
         }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    game.MoveBy(0, +1);
+                    break;
+
+                case Keys.Down:
+                    game.MoveBy(0, -1);
+                    break;
+
+                case Keys.Left:
+                    game.MoveBy(-1, 0);
+                    break;
+
+                case Keys.Right:
+                    game.MoveBy(+1, 0);
+                    break;
+            }
+
+            this.Invalidate();
+        }
     }
 }
