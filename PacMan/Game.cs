@@ -111,6 +111,16 @@ namespace ConsoleApplication1
                 this.Big = 8;
             }
 
+            if (this.Big > 0)
+            {
+                var ghostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
+                if (ghostId != -1)
+                    this.GhostLocations.RemoveAt(ghostId);
+            }
+        }
+
+        public void MoveGhosts()
+        {
             foreach (var ghostId in Enumerable.Range(0, this.GhostLocations.Count))
             {
                 bool movedGhost;
@@ -140,12 +150,6 @@ namespace ConsoleApplication1
                 } while (!movedGhost);
             }
 
-            if (this.Big > 0)
-            {
-                var ghostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
-                if (ghostId != -1)
-                    this.GhostLocations.RemoveAt(ghostId);
-            }
         }
 
         bool TryMoveGhostBy(int id, int dx, int dy)

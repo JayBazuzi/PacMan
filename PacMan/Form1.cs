@@ -18,6 +18,7 @@ namespace ConsoleApplication1
         {
             graphics = this.CreateGraphics();
             InitializeComponent();
+            this.timer1.Start();
         }
 
         const int scale = 10;
@@ -101,6 +102,12 @@ namespace ConsoleApplication1
                     break;
             }
 
+            this.Invalidate();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            game.MoveGhosts();
             this.Invalidate();
         }
     }
