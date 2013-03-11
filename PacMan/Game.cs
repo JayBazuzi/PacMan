@@ -10,6 +10,8 @@ namespace ConsoleApplication1
 
     class Game
     {
+        public event EventHandler<bool> OnGameOver = delegate { };
+
         public enum Tile
         {
             Blank,
@@ -102,21 +104,29 @@ namespace ConsoleApplication1
                 if (this.Big > 0) this.Big--;
             }
 
-            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.o)
-                this.Tiles.SetAt(this.PlayerLocation, Game.Tile._);
+            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.Dot)
+                this.Tiles.SetAt(this.PlayerLocation, Game.Tile.Blank);
 
-            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.O)
+            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.BigDot)
             {
-                this.Tiles.SetAt(this.PlayerLocation, Game.Tile._);
+                this.Tiles.SetAt(this.PlayerLocation, Game.Tile.Blank);
                 this.Big = 8;
             }
 
-            if (this.Big > 0)
-            {
-                var ghostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
-                if (ghostId != -1)
-                    this.GhostLocations.RemoveAt(ghostId);
-            }
+            CollisionCheck();
+
+            if (Won) this.OnGameOver(this, true);
+        }
+
+        private void CollisionCheck()
+        {
+            var collisionGhostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
+
+            if (collisionGhostId != -1)
+                if (this.Big > 0)
+                    this.GhostLocations.RemoveAt(collisionGhostId);
+                else
+                    this.OnGameOver(this, false);
         }
 
         public void MoveGhosts()
@@ -150,6 +160,7 @@ namespace ConsoleApplication1
                 } while (!movedGhost);
             }
 
+            CollisionCheck();
         }
 
         bool TryMoveGhostBy(int id, int dx, int dy)
@@ -165,14 +176,6 @@ namespace ConsoleApplication1
         }
 
         Random random = new Random(0);
-
-        public bool Lost
-        {
-            get
-            {
-                return GhostLocations.Any(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
-            }
-        }
 
         public bool Won
         {

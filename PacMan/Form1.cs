@@ -18,7 +18,19 @@ namespace ConsoleApplication1
         {
             graphics = this.CreateGraphics();
             InitializeComponent();
+            game.OnGameOver += GameOver;
             this.timer1.Start();
+        }
+
+        private void GameOver(object sender, bool won)
+        {
+            this.Invalidate();
+            this.timer1.Stop();
+            if (won) MessageBox.Show("You win!");
+            else MessageBox.Show("You lose!");
+
+
+            Application.Exit();
         }
 
         const int scale = 10;
@@ -43,15 +55,15 @@ namespace ConsoleApplication1
                 {
                     Rectangle rectangle = new Rectangle(x * scale, (game.Tiles.Height - y) * scale, scale, scale);
 
-                    if (game.PlayerLocation.x == x && game.PlayerLocation.y == y)
-                    {
-                        graphics.FillRectangle(game.Big > 0 ? this.BigPacManBrush : this.PacManBrush, rectangle);
-
-                    }
-                    else if (game.GhostLocations.Any(gl => gl.x == x && gl.y == y))
+                    if (game.GhostLocations.Any(gl => gl.x == x && gl.y == y))
                     {
                         // TODO: mix colors
                         graphics.FillRectangle(this.GhostBrushes[0], rectangle);
+                    }
+                    else if (game.PlayerLocation.x == x && game.PlayerLocation.y == y)
+                    {
+                        graphics.FillRectangle(game.Big > 0 ? this.BigPacManBrush : this.PacManBrush, rectangle);
+
                     }
                     else
                     {
