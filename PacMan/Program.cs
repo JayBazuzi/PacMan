@@ -21,19 +21,19 @@ namespace ConsoleApplication1
                 switch (key.Key)
                 {
                     case ConsoleKey.LeftArrow:
-                        game.TryMoveTo(game.PlayerLocation.x - 1, game.PlayerLocation.y);
+                        game.MoveBy(-1, 0);
                         break;
 
                     case ConsoleKey.RightArrow:
-                        game.TryMoveTo(game.PlayerLocation.x + 1, game.PlayerLocation.y);
+                        game.MoveBy(+1, 0);
                         break;
 
                     case ConsoleKey.UpArrow:
-                        game.TryMoveTo(game.PlayerLocation.x, game.PlayerLocation.y - 1);
+                        game.MoveBy(0, -1);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        game.TryMoveTo(game.PlayerLocation.x, game.PlayerLocation.y + 1);
+                        game.MoveBy(0, +1);
                         break;
                 }
 
@@ -144,6 +144,11 @@ class Game
 
         }
         return stringBuilder.ToString();
+    }
+
+    public void MoveBy(int dx, int dy)
+    {
+        TryMoveTo(this.PlayerLocation.x + dx, this.PlayerLocation.y + dy);
     }
 
     public void TryMoveTo(int x, int y)
