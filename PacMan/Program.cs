@@ -73,10 +73,17 @@ class Game
 {
     public enum Tile
     {
-        _,
-        o,
-        O,
-        l
+        Blank,
+        _ = Blank,
+
+        Dot,
+        o = Dot,
+
+        BigDot,
+        O = BigDot,
+
+        Wall,
+        l = Wall,
     }
 
     public Location PlayerLocation = new Location(3, 3);
@@ -119,19 +126,19 @@ class Game
                 {
                     switch (Tiles[x, y])
                     {
-                        case Tile._:
+                        case Tile.Blank:
                             stringBuilder.Append(" ");
                             break;
 
-                        case Tile.o:
+                        case Tile.Dot:
                             stringBuilder.Append(".");
                             break;
 
-                        case Tile.O:
+                        case Tile.BigDot:
                             stringBuilder.Append("*");
                             break;
 
-                        case Tile.l:
+                        case Tile.Wall:
                             stringBuilder.Append("|");
                             break;
 
@@ -148,14 +155,11 @@ class Game
 
     public void MoveBy(int dx, int dy)
     {
-        TryMoveTo(this.PlayerLocation.x + dx, this.PlayerLocation.y + dy);
-    }
+        Location newLocation = new Location(PlayerLocation.x + dx, PlayerLocation.y + dy);
 
-    public void TryMoveTo(int x, int y)
-    {
-        if (this.Tiles[x, y] != Game.Tile.l)
+        if (this.Tiles[newLocation.x, newLocation.y] != Game.Tile.Wall)
         {
-            this.PlayerLocation = new Location(x, y);
+            this.PlayerLocation = newLocation;
             if (this.Big > 0) this.Big--;
         }
 
@@ -176,19 +180,19 @@ class Game
                 switch (random.Next(4))
                 {
                     case 0:
-                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x - 1, GhostLocations[ghostId].y);
+                        movedGhost = TryMoveGhostBy(ghostId, -1, 0);
                         break;
 
                     case 1:
-                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x + 1, GhostLocations[ghostId].y);
+                        movedGhost = TryMoveGhostBy(ghostId, +1, 0);
                         break;
 
                     case 2:
-                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x, GhostLocations[ghostId].y - 1);
+                        movedGhost = TryMoveGhostBy(ghostId, 0, -1);
                         break;
 
                     case 3:
-                        movedGhost = TryMoveGhost(ghostId, GhostLocations[ghostId].x, GhostLocations[ghostId].y + 1);
+                        movedGhost = TryMoveGhostBy(ghostId, 0, +1);
                         break;
 
                     default:
@@ -205,11 +209,13 @@ class Game
         }
     }
 
-    bool TryMoveGhost(int id, int x, int y)
+    bool TryMoveGhostBy(int id, int dx, int dy)
     {
-        if (this.Tiles[x, y] != Game.Tile.l)
+        Location newLocation = new Location(this.GhostLocations[id].x + dx, this.GhostLocations[id].y + dy);
+
+        if (this.Tiles[newLocation.x, newLocation.y] != Game.Tile.l)
         {
-            this.GhostLocations[id] = new Location(x, y);
+            this.GhostLocations[id] = newLocation;
             return true;
         }
         else return false;
