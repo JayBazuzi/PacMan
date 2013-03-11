@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
+    using Extensions.MatrixExtensions;
+
     class Game
     {
         public enum Tile
@@ -94,18 +96,18 @@ namespace ConsoleApplication1
         {
             Location newLocation = new Location(PlayerLocation.x + dx, PlayerLocation.y + dy);
 
-            if (this.Tiles[newLocation.x, newLocation.y] != Game.Tile.Wall)
+            if (this.Tiles.GetAt(newLocation) != Game.Tile.Wall)
             {
                 this.PlayerLocation = newLocation;
                 if (this.Big > 0) this.Big--;
             }
 
-            if (this.Tiles[this.PlayerLocation.x, this.PlayerLocation.y] == Game.Tile.o)
-                this.Tiles[this.PlayerLocation.x, this.PlayerLocation.y] = Game.Tile._;
+            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.o)
+                this.Tiles.SetAt(this.PlayerLocation, Game.Tile._);
 
-            if (this.Tiles[this.PlayerLocation.x, this.PlayerLocation.y] == Game.Tile.O)
+            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.O)
             {
-                this.Tiles[this.PlayerLocation.x, this.PlayerLocation.y] = Game.Tile._;
+                this.Tiles.SetAt(this.PlayerLocation, Game.Tile._);
                 this.Big = 8;
             }
 
@@ -150,7 +152,7 @@ namespace ConsoleApplication1
         {
             Location newLocation = new Location(this.GhostLocations[id].x + dx, this.GhostLocations[id].y + dy);
 
-            if (this.Tiles[newLocation.x, newLocation.y] != Game.Tile.l)
+            if (this.Tiles.GetAt(newLocation) != Game.Tile.l)
             {
                 this.GhostLocations[id] = newLocation;
                 return true;
