@@ -10,6 +10,8 @@ namespace ConsoleApplication1
 
     class Game
     {
+        public event EventHandler<bool> OnGameOver = delegate { };
+
         public enum Tile
         {
             Blank,
@@ -25,11 +27,59 @@ namespace ConsoleApplication1
             l = Wall,
         }
 
-        public Location PlayerLocation = new Location(3, 3);
-        public List<Location> GhostLocations = new List<Location>(new[]{ 
-                                             new Location (2,7),
-                                             new Location (2,8),
-                                         });
+        public Location PlayerLocation;
+        public List<Location> GhostLocations = new List<Location>();
+
+        string map =
+@"
++------------------+
+| C    |G  G|      |
+| +-   +-  -+   -+ |
+| |  |        |  | |
+| +- | ------ | -+ |
+|*                *|
++------------------+
+";
+        /*
+1234567890123456789
+         */
+
+        public Game()
+        {
+            var mapRows = this.map.Replace("\r\n", "\n").Trim().Split('\n');
+            this.Tiles = new Matrix<Tile>(new Tile[mapRows[0].Length, mapRows.Length]);
+
+            foreach (var x in this.Tiles.HorizontalRange)
+            {
+                foreach (var y in this.Tiles.VerticalRange)
+                {
+                    this.Tiles[x, y] = Tile.Dot;
+
+                    switch (mapRows[this.Tiles.Height - y - 1][x])
+                    {
+                        case '+':
+                        case '|':
+                        case '-':
+                            this.Tiles[x, y] = Tile.Wall;
+                            break;
+
+                        case 'C':
+                            this.PlayerLocation = new Location(x, y);
+                            this.Tiles[x, y] = Tile.Blank;
+                            break;
+
+                        case 'G':
+                            this.GhostLocations.Add(new Location(x, y));
+                            break;
+
+                        case '*':
+                            this.Tiles[x, y] = Tile.BigDot;
+                            break;
+                    }
+                }
+
+            }
+        }
 
         public Matrix<Tile> Tiles = new Matrix<Tile>(new Tile[,] {
             { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
@@ -102,15 +152,33 @@ namespace ConsoleApplication1
                 if (this.Big > 0) this.Big--;
             }
 
-            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.o)
-                this.Tiles.SetAt(this.PlayerLocation, Game.Tile._);
+            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.Dot)
+                this.Tiles.SetAt(this.PlayerLocation, Game.Tile.Blank);
 
-            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.O)
+            if (this.Tiles.GetAt(this.PlayerLocation) == Game.Tile.BigDot)
             {
-                this.Tiles.SetAt(this.PlayerLocation, Game.Tile._);
+                this.Tiles.SetAt(this.PlayerLocation, Game.Tile.Blank);
                 this.Big = 8;
             }
 
+            CollisionCheck();
+
+            if (Won) this.OnGameOver(this, true);
+        }
+
+        private void CollisionCheck()
+        {
+            var collisionGhostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
+
+            if (collisionGhostId != -1)
+                if (this.Big > 0)
+                    this.GhostLocations.RemoveAt(collisionGhostId);
+                else
+                    this.OnGameOver(this, false);
+        }
+
+        public void MoveGhosts()
+        {
             foreach (var ghostId in Enumerable.Range(0, this.GhostLocations.Count))
             {
                 bool movedGhost;
@@ -140,12 +208,7 @@ namespace ConsoleApplication1
                 } while (!movedGhost);
             }
 
-            if (this.Big > 0)
-            {
-                var ghostId = GhostLocations.FindIndex(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
-                if (ghostId != -1)
-                    this.GhostLocations.RemoveAt(ghostId);
-            }
+            CollisionCheck();
         }
 
         bool TryMoveGhostBy(int id, int dx, int dy)
@@ -161,14 +224,6 @@ namespace ConsoleApplication1
         }
 
         Random random = new Random(0);
-
-        public bool Lost
-        {
-            get
-            {
-                return GhostLocations.Any(gl => PlayerLocation.x == gl.x && PlayerLocation.y == gl.y);
-            }
-        }
 
         public bool Won
         {
