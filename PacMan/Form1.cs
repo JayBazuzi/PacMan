@@ -24,7 +24,9 @@ namespace ConsoleApplication1
         readonly Brush WallBrush = new SolidBrush(Color.DarkBlue);
         readonly Brush PacManBrush = new SolidBrush(Color.Orange);
         readonly Brush BigPacManBrush = new SolidBrush(Color.Brown);
-        readonly Brush DotBrush = new SolidBrush(Color.White);
+        readonly Brush DotBrush = new SolidBrush(Color.Gray);
+        readonly Brush BigDotBrush = new SolidBrush(Color.White);
+        readonly Brush BlankBrush = new SolidBrush(Color.Black);
         readonly Brush[] GhostBrushes = new[] {
             new SolidBrush(Color.Red),
             new SolidBrush(Color.Green),
@@ -55,6 +57,7 @@ namespace ConsoleApplication1
                         switch (game.Tiles[x, y])
                         {
                             case Game.Tile.Blank:
+                                graphics.FillRectangle(this.BlankBrush, rectangle);
                                 break;
 
                             case Game.Tile.Dot:
@@ -62,6 +65,7 @@ namespace ConsoleApplication1
                                 break;
 
                             case Game.Tile.BigDot:
+                                graphics.FillRectangle(this.BigDotBrush, rectangle);
                                 break;
 
                             case Game.Tile.Wall:
