@@ -27,11 +27,55 @@ namespace ConsoleApplication1
             l = Wall,
         }
 
-        public Location PlayerLocation = new Location(3, 3);
-        public List<Location> GhostLocations = new List<Location>(new[]{ 
-                                             new Location (2,7),
-                                             new Location (2,8),
-                                         });
+        public Location PlayerLocation;
+        public List<Location> GhostLocations = new List<Location>();
+
+        string map =
+@"
++---------+
+|  C    G |
+|    +  G |
+|    +    |
+|      *  |
++---------+
+";
+
+        public Game()
+        {
+            var mapRows = this.map.Replace("\r\n", "\n").Trim().Split('\n');
+            this.Tiles = new Matrix<Tile>(new Tile[mapRows[0].Length, mapRows.Length]);
+
+            foreach (var x in this.Tiles.HorizontalRange)
+            {
+                foreach (var y in this.Tiles.VerticalRange)
+                {
+                    this.Tiles[x, y] = Tile.Dot;
+
+                    switch (mapRows[this.Tiles.Height - y - 1][x])
+                    {
+                        case '+':
+                        case '|':
+                        case '-':
+                            this.Tiles[x, y] = Tile.Wall;
+                            break;
+
+                        case 'C':
+                            this.PlayerLocation = new Location(x, y);
+                            this.Tiles[x, y] = Tile.Blank;
+                            break;
+
+                        case 'G':
+                            this.GhostLocations.Add(new Location(x, y));
+                            break;
+
+                        case '*':
+                            this.Tiles[x, y] = Tile.BigDot;
+                            break;
+                    }
+                }
+
+            }
+        }
 
         public Matrix<Tile> Tiles = new Matrix<Tile>(new Tile[,] {
             { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
