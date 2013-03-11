@@ -33,7 +33,7 @@ namespace ConsoleApplication1
             Application.Exit();
         }
 
-        const int scale = 10;
+        const int scale = 14;
         readonly Brush WallBrush = new SolidBrush(Color.DarkBlue);
         readonly Brush PacManBrush = new SolidBrush(Color.Orange);
         readonly Brush BigPacManBrush = new SolidBrush(Color.Brown);
