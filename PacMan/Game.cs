@@ -29,13 +29,13 @@ namespace ConsoleApplication1
                                              new Location (2,8),
                                          });
 
-        public Tile[,] Tiles = new Tile[,] {
-        { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
-        { Tile.l, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.l, },
-        { Tile.l, Tile.o, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.o, Tile.o, Tile.l, },
-        { Tile.l, Tile.o, Tile.o, Tile.o, Tile.O, Tile.o, Tile.o, Tile.o, Tile.O, Tile.l, },
-        { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
-    };
+        public Matrix<Tile> Tiles = new Matrix<Tile>(new Tile[,] {
+            { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
+            { Tile.l, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.o, Tile.l, },
+            { Tile.l, Tile.o, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.o, Tile.o, Tile.l, },
+            { Tile.l, Tile.o, Tile.o, Tile.o, Tile.O, Tile.o, Tile.o, Tile.o, Tile.O, Tile.l, },
+            { Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l, Tile.l,},
+        });
 
         public int Big = 0;
 
@@ -43,9 +43,9 @@ namespace ConsoleApplication1
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            foreach (var y in Enumerable.Range(0, Tiles.GetLength(1)))
+            foreach (var y in Tiles.VerticalRange)
             {
-                foreach (var x in Enumerable.Range(0, Tiles.GetLength(0)))
+                foreach (var x in Tiles.HorizontalRange)
                 {
                     if (PlayerLocation.x == x && PlayerLocation.y == y)
                     {
@@ -172,8 +172,8 @@ namespace ConsoleApplication1
         {
             get
             {
-                foreach (var y in Enumerable.Range(0, Tiles.GetLength(1)))
-                    foreach (var x in Enumerable.Range(0, Tiles.GetLength(0)))
+                foreach (var y in Tiles.VerticalRange)
+                    foreach (var x in Tiles.HorizontalRange)
                         if (this.Tiles[x, y] == Tile.o || this.Tiles[x, y] == Tile.O)
                             return false;
 
